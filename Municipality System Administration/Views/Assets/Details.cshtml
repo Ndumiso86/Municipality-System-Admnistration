@@ -1,0 +1,539 @@
+﻿@model Municipality_System_Administration.Models.Asset
+@using Municipality_System_Administration.Models
+@{
+    ViewBag.Title = "Asset Details";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background: #f4f7fb;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #0f4c81, #1f7a8c);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card-custom {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+    }
+
+    .detail-section {
+        margin-bottom: 25px;
+    }
+
+    .detail-section-title {
+        color: #0f4c81;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+
+    .detail-item {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+        width: 180px;
+        flex-shrink: 0;
+    }
+
+    .detail-value {
+        color: #212529;
+        flex: 1;
+    }
+
+    .status-badge {
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-available {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-assigned {
+        background: #007bff;
+        color: white;
+    }
+
+    .status-maintenance {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .status-repair {
+        background: #fd7e14;
+        color: white;
+    }
+
+    .status-disposed {
+        background: #dc3545;
+        color: white;
+    }
+
+    .status-lost {
+        background: #6c757d;
+        color: white;
+    }
+
+    .status-stolen {
+        background: #343a40;
+        color: white;
+    }
+
+    .condition-badge {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .condition-new {
+        background: #28a745;
+        color: white;
+    }
+
+    .condition-excellent {
+        background: #20c997;
+        color: white;
+    }
+
+    .condition-good {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .condition-fair {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .condition-poor {
+        background: #fd7e14;
+        color: white;
+    }
+
+    .condition-damaged {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+    .btn-secondary {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .btn-warning {
+        color: #212529;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+    .btn-success {
+        color: #fff;
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+    .btn-danger {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .col-md-6, .col-md-12 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    @@media (max-width: 768px) {
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .detail-item {
+            flex-direction: column;
+        }
+
+        .detail-label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+
+    <div class="header">
+        <h2>
+            <i class="fa fa-info-circle"></i>
+            Asset Details
+        </h2>
+        <p>Complete information for asset: <strong>@Model.AssetNumber</strong></p>
+    </div>
+
+    <div class="card-custom">
+
+        <div class="detail-section">
+            <h5 class="detail-section-title"><i class="fa fa-info-circle"></i> Basic Information</h5>
+            <div class="detail-item">
+                <span class="detail-label">Asset Number</span>
+                <span class="detail-value"><strong>@Model.AssetNumber</strong></span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Asset Name</span>
+                <span class="detail-value">@Model.AssetName</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Category</span>
+                <span class="detail-value">@Model.Category</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Description</span>
+                <span class="detail-value">@(string.IsNullOrEmpty(Model.Description) ? "N/A" : Model.Description)</span>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h5 class="detail-section-title"><i class="fa fa-tag"></i> Specifications</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Brand</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(Model.Brand) ? "N/A" : Model.Brand)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Model</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(Model.Model) ? "N/A" : Model.Model)</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Serial Number</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(Model.SerialNumber) ? "N/A" : Model.SerialNumber)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(Model.Location) ? "N/A" : Model.Location)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h5 class="detail-section-title"><i class="fa fa-shopping-cart"></i> Purchase Information</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Purchase Date</span>
+                        <span class="detail-value">@(Model.PurchaseDate?.ToString("dd MMM yyyy") ?? "N/A")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Purchase Price</span>
+                        <span class="detail-value">@(Model.PurchasePrice?.ToString("C2") ?? "N/A")</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Supplier</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(Model.Supplier) ? "N/A" : Model.Supplier)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Warranty Expiry</span>
+                        <span class="detail-value">@(Model.WarrantyExpiry?.ToString("dd MMM yyyy") ?? "N/A")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h5 class="detail-section-title"><i class="fa fa-wrench"></i> Status Information</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">
+                            @{
+                                string statusClass = "status-" + (Model.Status?.ToLower().Replace(" ", "") ?? "available");
+                            }
+                            <span class="status-badge @statusClass">
+                                <i class="fa fa-circle"></i>
+                                @Model.Status
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Condition</span>
+                        <span class="detail-value">
+                            @{
+                                string conditionClass = "condition-" + (Model.Condition?.ToLower() ?? "good");
+                            }
+                            <span class="condition-badge @conditionClass">
+                                @Model.Condition
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Is Active</span>
+                        <span class="detail-value">
+                            @if (Model.IsActive)
+                            {
+                                <span style="color: #28a745;"><i class="fa fa-check-circle"></i> Active</span>
+                            }
+                            else
+                            {
+                                <span style="color: #dc3545;"><i class="fa fa-times-circle"></i> Inactive</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Is Assigned</span>
+                        <span class="detail-value">
+                            @if (Model.IsAssigned)
+                            {
+                                <span style="color: #007bff;"><i class="fa fa-user-check"></i> Assigned</span>
+                            }
+                            else
+                            {
+                                <span style="color: #6c757d;"><i class="fa fa-user-slash"></i> Not Assigned</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.AssignedToUserId))
+        {
+            <div class="detail-section">
+                <h5 class="detail-section-title"><i class="fa fa-user"></i> Assignment Information</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label">Assigned To</span>
+                            <span class="detail-value">
+                                @{
+                                    using (var db = new ApplicationDbContext())
+                                    {
+                                        var staff = db.Staff.FirstOrDefault(s => s.UserId == Model.AssignedToUserId);
+                                        <span>@(staff?.FullName ?? "Unknown")</span>
+                                    }
+                                }
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label">Date Assigned</span>
+                            <span class="detail-value">@(Model.DateAssigned?.ToString("dd MMM yyyy") ?? "N/A")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="detail-section">
+            <h5 class="detail-section-title"><i class="fa fa-calendar-alt"></i> Maintenance Information</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Last Maintenance</span>
+                        <span class="detail-value">@(Model.LastMaintenanceDate?.ToString("dd MMM yyyy") ?? "N/A")</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Next Maintenance</span>
+                        <span class="detail-value">@(Model.NextMaintenanceDate?.ToString("dd MMM yyyy") ?? "N/A")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Notes))
+        {
+            <div class="detail-section">
+                <h5 class="detail-section-title"><i class="fa fa-sticky-note"></i> Notes</h5>
+                <div class="detail-item">
+                    <span class="detail-value">@Model.Notes</span>
+                </div>
+            </div>
+        }
+
+        <div class="detail-section">
+            <h5 class="detail-section-title"><i class="fa fa-clock"></i> Timestamps</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Date Created</span>
+                        <span class="detail-value">@Model.DateCreated.ToString("dd MMM yyyy HH:mm")</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <span class="detail-label">Last Updated</span>
+                        <span class="detail-value">@(Model.LastUpdated?.ToString("dd MMM yyyy HH:mm") ?? "N/A")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-12">
+                @if (User.IsInRole("Admin") || User.IsInRole("AssetManager"))
+                {
+                    <a href="@Url.Action("Edit", new { id = Model.AssetId })" class="btn btn-primary">
+                        <i class="fa fa-edit"></i>
+                        Edit
+                    </a>
+
+                    if (Model.Status == "Assigned")
+                    {
+                        <a href="@Url.Action("Unassign", new { id = Model.AssetId })" class="btn btn-warning">
+                            <i class="fa fa-user-slash"></i>
+                            Unassign
+                        </a>
+                    }
+                    else if (Model.Status == "Available")
+                    {
+                        <a href="@Url.Action("Assign", new { id = Model.AssetId })" class="btn btn-success">
+                            <i class="fa fa-user-plus"></i>
+                            Assign
+                        </a>
+                    }
+
+                    <a href="@Url.Action("Delete", new { id = Model.AssetId })" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                        Delete
+                    </a>
+                }
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"></i>
+                    Back to List
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
