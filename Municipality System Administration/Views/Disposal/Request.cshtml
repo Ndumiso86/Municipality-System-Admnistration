@@ -1,0 +1,339 @@
+﻿@using Municipality_System_Administration.Models
+@model Municipality_System_Administration.Models.Asset
+
+@{
+    ViewBag.Title = "Request Disposal";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background: #f4f7fb;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #fd7e14, #e06b0a);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card-custom {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .required:after {
+        content: " *";
+        color: red;
+        font-weight: bold;
+    }
+
+    .asset-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .asset-info-item {
+        padding: 5px 0;
+    }
+
+    .asset-info-label {
+        font-weight: 600;
+        color: #6c757d;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-warning {
+        color: #212529;
+        background-color: #fd7e14;
+        border-color: #fd7e14;
+    }
+
+        .btn-warning:hover {
+            background-color: #e06b0a;
+            border-color: #d3690a;
+            color: white;
+        }
+
+    .btn-secondary {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        border-radius: 0.3rem;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .col-md-6, .col-md-12 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem !important;
+    }
+
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .alert {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-dismissible {
+        padding-right: 4rem;
+    }
+
+    .close {
+        float: right;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        opacity: .5;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .info-box {
+        background: #e8f4fd;
+        border-left: 4px solid #fd7e14;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    @@media (max-width: 768px) {
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="header">
+        <h2><i class="fa fa-recycle"></i> Request Disposal</h2>
+        <p>Submit a disposal request for asset: <strong>@Model.AssetNumber</strong></p>
+    </div>
+
+    <div class="card-custom">
+
+        @if (Model != null)
+        {
+            <div class="info-box">
+                <i class="fa fa-info-circle"></i>
+                <strong>Note:</strong> This request will be sent to the Finance Officer for review and approval.
+                The disposal will only be completed after Finance approval.
+            </div>
+
+            using (Html.BeginForm("Request", "Disposal", new { id = Model.AssetId }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.AssetId)
+
+                <div class="asset-info">
+                    <h5><i class="fa fa-box"></i> Asset Information</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Asset Number:</span>
+                                <strong>@Model.AssetNumber</strong>
+                            </div>
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Asset Name:</span>
+                                <strong>@Model.AssetName</strong>
+                            </div>
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Category:</span>
+                                <strong>@Model.Category</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Brand/Model:</span>
+                                <strong>@Model.Brand @(!string.IsNullOrEmpty(Model.Model) ? "/ " + Model.Model : "")</strong>
+                            </div>
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Condition:</span>
+                                <strong>@Model.Condition</strong>
+                            </div>
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Current Status:</span>
+                                <strong>@Model.Status</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DisposalMethod" class="required">Disposal Method</label>
+                            @Html.DropDownList("DisposalMethod", (SelectList)ViewBag.DisposalMethods, "-- Select Method --", new { @class = "form-control" })
+                            @Html.ValidationMessage("DisposalMethod", "", new { @class = "text-danger" })
+                            <small class="text-muted">
+                                <i class="fa fa-info-circle"></i>
+                                How should this asset be disposed?
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Reason" class="required">Reason for Disposal</label>
+                            <textarea name="Reason" class="form-control" rows="3" placeholder="Provide a detailed reason for disposing this asset..." required></textarea>
+                            @Html.ValidationMessage("Reason", "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fa fa-paper-plane"></i> Submit Disposal Request
+                        </button>
+                        <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary btn-lg">
+                            <i class="fa fa-arrow-left"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-circle"></i> Asset not found or has been deleted.
+            </div>
+            <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> Back to Assets
+            </a>
+        }
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

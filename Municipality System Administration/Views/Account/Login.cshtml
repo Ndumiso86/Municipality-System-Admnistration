@@ -1,0 +1,61 @@
+﻿@using Municipality_System_Administration.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+
+<main aria-labelledby="title" class="d-flex justify-content-center align-items-center min-vh-100 py-5">
+    <div class="col-md-5 col-lg-4">
+
+        <!-- Professional Card Container -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
+                <h3 class="mb-0"><i class="fa fa-user-lock me-2"></i>Municipality Login</h3>
+                <p class="mb-0 small opacity-75">Sign in to access the administration system</p>
+            </div>
+
+            <div class="card-body p-4">
+
+                <section id="loginForm">
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", @class = "needs-validation" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2 small", role = "alert" })
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Email, new { @class = "form-label fw-bold small text-uppercase text-secondary" })
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-envelope text-muted"></i></span>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg", placeholder = "Enter your email address", autocomplete = "email" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small fw-bold mt-1" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Password, new { @class = "form-label fw-bold small text-uppercase text-secondary" })
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-key text-muted"></i></span>
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-lg", placeholder = "Enter your password", autocomplete = "current-password" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small fw-bold mt-1" })
+                        </div>
+
+                        <div class="form-check mb-4">
+                            @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
+                            @Html.LabelFor(m => m.RememberMe, new { @class = "form-check-label text-secondary" })
+                        </div>
+
+                        <div class="d-grid">
+                            <input type="submit" value="Log In" class="btn btn-primary btn-lg rounded-3 shadow-sm" />
+                        </div>
+                    }
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

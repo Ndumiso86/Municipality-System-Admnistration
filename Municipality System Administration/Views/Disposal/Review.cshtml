@@ -1,0 +1,493 @@
+﻿@model Municipality_System_Administration.Models.DisposalRequest
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using Municipality_System_Administration.Models
+
+@{
+    ViewBag.Title = "Review Disposal Request";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background: #f4f7fb;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #0f4c81, #1f7a8c);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card-custom {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+        margin-bottom: 20px;
+    }
+
+    .detail-item {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+        width: 180px;
+        flex-shrink: 0;
+    }
+
+    .detail-value {
+        color: #212529;
+        flex: 1;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: #fd7e14;
+        color: white;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .required:after {
+        content: " *";
+        color: red;
+        font-weight: bold;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        color: #fff;
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+    .btn-danger {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+    .btn-warning {
+        color: #212529;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+    .btn-secondary {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        border-radius: 0.3rem;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .col-md-6, .col-md-12 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem !important;
+    }
+
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .alert {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-dismissible {
+        padding-right: 4rem;
+    }
+
+    .close {
+        float: right;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        opacity: .5;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .info-box {
+        background: #e8f4fd;
+        border-left: 4px solid #0f4c81;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .btn-group-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .disposal-method-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 15px;
+    }
+
+        .disposal-method-section h6 {
+            color: #0f4c81;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+    .form-control[readonly] {
+        background-color: #e9ecef;
+    }
+
+    .asset-summary {
+        background: #e8f4fd;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border-left: 4px solid #0f4c81;
+        margin-bottom: 10px;
+    }
+
+    @@media (max-width: 768px) {
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .detail-item {
+            flex-direction: column;
+        }
+
+        .detail-label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .btn-group-actions {
+            flex-direction: column;
+        }
+
+            .btn-group-actions .btn {
+                width: 100%;
+            }
+    }
+</style>
+
+<div class="container mt-4">
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa fa-exclamation-circle"></i>
+            @TempData["Error"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="header">
+        <h2>
+            <i class="fa fa-search"></i>
+            Review Disposal Request
+        </h2>
+        <p>Review disposal request #@Model.DisposalRequestId</p>
+    </div>
+
+    @if (Model != null)
+    {
+        using (var db = new ApplicationDbContext())
+        {
+            var userManager = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(db));
+            var requestedBy = userManager.FindById(Model.RequestedByUserId);
+            var asset = db.Assets.Find(Model.AssetId);
+            <div class="card-custom">
+                <h5><i class="fa fa-info-circle"></i> Request Information</h5>
+                <div class="detail-item">
+                    <span class="detail-label">Request ID</span>
+                    <span class="detail-value"><strong>#@Model.DisposalRequestId</strong></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Requested By</span>
+                    <span class="detail-value">@(requestedBy?.UserName ?? "Unknown")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Request Date</span>
+                    <span class="detail-value">@Model.RequestDate.ToString("dd MMM yyyy HH:mm")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value">
+                        <span class="status-badge status-pending">
+                            <i class="fa fa-circle"></i> @Model.Status
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5><i class="fa fa-box"></i> Asset Information</h5>
+                <div class="asset-summary">
+                    <strong>@(asset?.AssetName ?? "Unknown")</strong>
+                    <br />
+                    <small class="text-muted">@(asset?.AssetNumber ?? "N/A")</small>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Category</span>
+                    <span class="detail-value">@(asset?.Category ?? "N/A")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Brand/Model</span>
+                    <span class="detail-value">@(asset?.Brand ?? "N/A") @(!string.IsNullOrEmpty(asset?.Model) ? "/ " + asset.Model : "")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Serial Number</span>
+                    <span class="detail-value">@(asset?.SerialNumber ?? "N/A")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Condition</span>
+                    <span class="detail-value">@(asset?.Condition ?? "N/A")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Current Status</span>
+                    <span class="detail-value">@(asset?.Status ?? "N/A")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Purchase Price</span>
+                    <span class="detail-value">@(asset?.PurchasePrice?.ToString("C2") ?? "N/A")</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Date Created</span>
+                    <span class="detail-value">@(asset?.DateCreated.ToString("dd MMM yyyy") ?? "N/A")</span>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5><i class="fa fa-recycle"></i> Disposal Details</h5>
+                <div class="detail-item">
+                    <span class="detail-label">Reason for Disposal</span>
+                    <span class="detail-value">@Model.Reason</span>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5><i class="fa fa-pencil-alt"></i> Review Decision</h5>
+                <div class="info-box">
+                    <i class="fa fa-info-circle"></i>
+                    <strong>Note:</strong> As the reviewer, you will determine the disposal method and value.
+                </div>
+
+                @using (Html.BeginForm("Review", "Disposal", new { id = Model.DisposalRequestId }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.DisposalRequestId)
+
+                    <div class="form-group">
+                        <label for="ReviewNotes">Review Notes</label>
+                        <textarea name="ReviewNotes" class="form-control" rows="3" placeholder="Add your review notes here..."></textarea>
+                        <small class="text-muted">
+                            <i class="fa fa-info-circle"></i>
+                            Provide your assessment and recommendations.
+                        </small>
+                    </div>
+
+                    <div class="disposal-method-section">
+                        <h6><i class="fa fa-cog"></i> Disposal Method & Value (Decided by Reviewer)</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="DisposalMethod" class="required">Disposal Method</label>
+                                    @Html.DropDownList("DisposalMethod", (SelectList)ViewBag.DisposalMethods, "-- Select Method --", new { @class = "form-control" })
+                                    <small class="text-muted">
+                                        <i class="fa fa-info-circle"></i>
+                                        How should this asset be disposed?
+                                    </small>
+                                    @Html.ValidationMessage("DisposalMethod", "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="DisposalValue">Disposal Value</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding: 0.375rem 0.75rem; background-color: #e9ecef; border: 1px solid #ced4da; border-right: none; border-radius: 0.25rem 0 0 0.25rem;">R</span>
+                                        <input type="number" name="DisposalValue" class="form-control" placeholder="0.00" step="0.01" min="0" style="border-radius: 0 0.25rem 0.25rem 0;" />
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="fa fa-info-circle"></i>
+                                        Estimated value from disposal (if applicable).
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="btn-group-actions">
+                        <button type="submit" name="Action" value="Approve" class="btn btn-success btn-lg">
+                            <i class="fa fa-check"></i> Approve
+                        </button>
+                        <button type="submit" name="Action" value="Reject" class="btn btn-danger btn-lg">
+                            <i class="fa fa-times"></i> Reject
+                        </button>
+                        <button type="submit" name="Action" value="Review" class="btn btn-warning btn-lg">
+                            <i class="fa fa-search"></i> Mark as Reviewed
+                        </button>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                            <i class="fa fa-arrow-left"></i> Cancel
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            <i class="fa fa-exclamation-circle"></i>
+            Request not found.
+        </div>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i> Back to List
+        </a>
+    }
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
