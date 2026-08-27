@@ -1,0 +1,387 @@
+﻿
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using Municipality_System_Administration.Models
+
+@model IEnumerable<Municipality_System_Administration.Models.Staff>
+
+@{
+    ViewBag.Title = "Staff Management";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background: #f4f7fb;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg,#0f4c81,#1f7a8c);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card-box {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .table thead {
+        background: #0f4c81;
+        color: white;
+    }
+
+        .table thead th {
+            color: white;
+            font-weight: 600;
+        }
+
+    .status-active {
+        background: #198754;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+
+    .status-disabled {
+        background: #dc3545;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+
+    .role-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .role-admin {
+        background: #8e44ad;
+        color: white;
+    }
+
+    .role-assetmanager {
+        background: #2980b9;
+        color: white;
+    }
+
+    .role-municipalemployee {
+        background: #27ae60;
+        color: white;
+    }
+
+    .role-departmenthead {
+        background: #f39c12;
+        color: white;
+    }
+
+    .role-technician {
+        background: #e67e22;
+        color: white;
+    }
+
+    .role-financeofficer {
+        background: #2c3e50;
+        color: white;
+    }
+
+    .role-default {
+        background: #95a5a6;
+        color: white;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+        .action-buttons .btn {
+            margin: 2px;
+            min-width: 32px;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 40px 0;
+        color: #6c757d;
+    }
+
+        .no-data i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+    .employee-count {
+        background: #e9ecef;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        color: #0f4c81;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .search-box {
+        max-width: 300px;
+        display: inline-block;
+        float: right;
+    }
+
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <div class="page-header">
+        <h2>
+            <i class="fa fa-users"></i>
+            Municipal Staff Management
+            <span class="employee-count">
+                <i class="fa fa-user"></i>
+                @Model.Count() Employees
+            </span>
+        </h2>
+        <p>
+            Manage employees, roles and system access.
+        </p>
+    </div>
+
+    <div class="card-box">
+
+        <div class="clearfix mb-3">
+            <div class="float-left">
+                <a href="@Url.Action("Create")" class="btn btn-success">
+                    <i class="fa fa-user-plus"></i>
+                    Add Staff Member
+                </a>
+            </div>
+            <div class="float-right">
+                <input type="text" id="searchInput" class="form-control search-box" placeholder="Search staff..." />
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="staffTable">
+                <thead>
+                    <tr>
+                        <th>Employee No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        using (var db = new ApplicationDbContext())
+                        {
+                            var userManager = new UserManager<ApplicationUser>(
+                                new UserStore<ApplicationUser>(db));
+
+                            foreach (var item in Model)
+                            {
+                                string roleName = "No Role";
+                                string roleClass = "role-default";
+
+                                try
+                                {
+                                    var roles = userManager.GetRoles(item.UserId);
+                                    if (roles.Any())
+                                    {
+                                        roleName = roles.FirstOrDefault() ?? "No Role";
+
+                                        switch (roleName.ToLower())
+                                        {
+                                            case "admin":
+                                                roleClass = "role-admin";
+                                                break;
+                                            case "assetmanager":
+                                                roleClass = "role-assetmanager";
+                                                break;
+                                            case "municipalemployee":
+                                                roleClass = "role-municipalemployee";
+                                                break;
+                                            case "departmenthead":
+                                                roleClass = "role-departmenthead";
+                                                break;
+                                            case "technician":
+                                                roleClass = "role-technician";
+                                                break;
+                                            case "financeofficer":
+                                                roleClass = "role-financeofficer";
+                                                break;
+                                            default:
+                                                roleClass = "role-default";
+                                                break;
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    roleName = "Error";
+                                    roleClass = "role-default";
+                                }
+
+                                <tr>
+                                    <td>
+                                        <strong>@item.EmployeeNumber</strong>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-user-circle"></i>
+                                        @item.FullName
+                                    </td>
+                                    <td>
+                                        <a href="mailto:@item.Email" style="color: #0f4c81;">
+                                            <i class="fa fa-envelope"></i>
+                                            @item.Email
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="tel:@item.PhoneNumber" style="color: #0f4c81;">
+                                            <i class="fa fa-phone"></i>
+                                            @item.PhoneNumber
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="role-badge @roleClass">
+                                            <i class="fa fa-shield-alt"></i>
+                                            @roleName
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="status-active">
+                                                <i class="fa fa-check-circle"></i>
+                                                Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-disabled">
+                                                <i class="fa fa-times-circle"></i>
+                                                Disabled
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="@Url.Action("Edit", "Staff", new { id = item.StaffId })"
+                                               class="btn btn-primary btn-sm"
+                                               title="Edit">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <a href="@Url.Action("Details", "Staff", new { id = item.StaffId })"
+                                               class="btn btn-info btn-sm"
+                                               title="Details">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+
+                                            <a href="@Url.Action("ResetPassword", "Staff", new { id = item.StaffId })"
+                                               class="btn btn-secondary btn-sm"
+                                               title="Reset Password">
+                                                <i class="fa fa-key"></i>
+                                            </a>
+
+                                            @if (item.IsActive)
+                                            {
+                                                <a href="@Url.Action("Disable", "Staff", new { id = item.StaffId })"
+                                                   class="btn btn-warning btn-sm"
+                                                   title="Disable">
+                                                    <i class="fa fa-ban"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("Enable", "Staff", new { id = item.StaffId })"
+                                                   class="btn btn-success btn-sm"
+                                                   title="Enable">
+                                                    <i class="fa fa-check"></i>
+                                                </a>
+                                            }
+
+                                            <a href="@Url.Action("Delete", "Staff", new { id = item.StaffId })"
+                                               class="btn btn-danger btn-sm"
+                                               title="Delete">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="no-data">
+                                    <i class="fa fa-users"></i>
+                                    <h4>No staff members found</h4>
+                                    <p>Click the "Add Staff Member" button to create your first employee.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3 text-muted">
+            <small>
+                <i class="fa fa-info-circle"></i>
+                Total: <strong>@Model.Count()</strong> staff members
+                | Active: <strong>@Model.Count(s => s.IsActive)</strong>
+                | Disabled: <strong>@Model.Count(s => !s.IsActive)</strong>
+            </small>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+
+            $("#searchInput").on("keyup", function () {
+
+                var value = $(this).val().toLowerCase();
+
+                $("#staffTable tbody tr").each(function () {
+
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+
+                });
+
+            });
+
+        });
+    </script>
+}
