@@ -93,7 +93,10 @@ namespace Municipality_System_Administration.Controllers
                 existingStaff.LastName = staff.LastName;
                 existingStaff.PhoneNumber = staff.PhoneNumber;
                 existingStaff.Email = staff.Email;
+ staffcontrollerandviews
 
+                
+master
 
                 db.SaveChanges();
 
@@ -476,4 +479,7 @@ namespace Municipality_System_Administration.Controllers
 
 
     }
+    staffcontrollerandviews
+} 
 }
+ master
