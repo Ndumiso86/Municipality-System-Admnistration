@@ -1,4 +1,5 @@
-﻿@model Municipality_System_Administration.Models.Asset
+@using Municipality_System_Administration.Models
+@model Municipality_System_Administration.Models.Asset
 
 @{
     ViewBag.Title = "Request Disposal";
@@ -221,8 +222,7 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-circle"></i>
-            @TempData["Error"]
+            <i class="fa fa-exclamation-circle"></i> @TempData["Error"]
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -230,10 +230,7 @@
     }
 
     <div class="header">
-        <h2>
-            <i class="fa fa-recycle"></i>
-            Request Disposal
-        </h2>
+        <h2><i class="fa fa-recycle"></i> Request Disposal</h2>
         <p>Submit a disposal request for asset: <strong>@Model.AssetNumber</strong></p>
     </div>
 
@@ -243,8 +240,8 @@
         {
             <div class="info-box">
                 <i class="fa fa-info-circle"></i>
-                <strong>Note:</strong> Your disposal request will be reviewed by the Asset Manager.
-                The disposal method will be determined by management.
+                <strong>Note:</strong> This request will be sent for review and approval.
+                The disposal will only be completed after formal approval.
             </div>
 
             using (Html.BeginForm("Request", "Disposal", new { id = Model.AssetId }, FormMethod.Post))
@@ -288,14 +285,25 @@
 
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="form-group">
-                    <label for="Reason" class="required">Reason for Disposal</label>
-                    <textarea name="Reason" class="form-control" rows="4" placeholder="Please provide a detailed reason for disposing this asset..." required></textarea>
-                    <small class="text-muted">
-                        <i class="fa fa-info-circle"></i>
-                        Provide a clear explanation of why this asset should be disposed.
-                    </small>
-                    @Html.ValidationMessage("Reason", "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DisposalMethod" class="required">Disposal Method</label>
+                            @Html.DropDownList("DisposalMethod", (SelectList)ViewBag.DisposalMethods, "-- Select Method --", new { @class = "form-control" })
+                            @Html.ValidationMessage("DisposalMethod", "", new { @class = "text-danger" })
+                            <small class="text-muted">
+                                <i class="fa fa-info-circle"></i>
+                                How should this asset be disposed?
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Reason" class="required">Reason for Disposal</label>
+                            <textarea name="Reason" class="form-control" rows="3" placeholder="Provide a detailed reason for disposing this asset..." required></textarea>
+                            @Html.ValidationMessage("Reason", "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </div>
 
                 <hr />
@@ -303,12 +311,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="fa fa-paper-plane"></i>
-                            Submit Disposal Request
+                            <i class="fa fa-paper-plane"></i> Submit Disposal Request
                         </button>
                         <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary btn-lg">
-                            <i class="fa fa-arrow-left"></i>
-                            Cancel
+                            <i class="fa fa-arrow-left"></i> Cancel
                         </a>
                     </div>
                 </div>
@@ -317,12 +323,10 @@
         else
         {
             <div class="alert alert-danger">
-                <i class="fa fa-exclamation-circle"></i>
-                Asset not found or has been deleted.
+                <i class="fa fa-exclamation-circle"></i> Asset not found or has been deleted.
             </div>
             <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i>
-                Back to Assets
+                <i class="fa fa-arrow-left"></i> Back to Assets
             </a>
         }
 
@@ -333,4 +337,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-

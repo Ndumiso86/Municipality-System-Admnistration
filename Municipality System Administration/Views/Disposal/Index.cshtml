@@ -1,11 +1,11 @@
-﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity;
 @using Microsoft.AspNet.Identity.EntityFramework;
 @using Municipality_System_Administration.Models;
 @using System;
-@model IEnumerable<DisposalRequest>
 @using System.Collections.Generic;
 @using System.Linq;
 @using System.Web.Mvc;
+@model IEnumerable<Municipality_System_Administration.Models.DisposalRequest>
 
 @{
     ViewBag.Title = "Disposal Requests";
@@ -58,6 +58,30 @@
         font-size: 0.85rem;
     }
 
+    .filter-section {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .filter-select {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+
     .table thead {
         background: #0f4c81;
         color: white;
@@ -71,6 +95,10 @@
     .table tbody td {
         padding: 12px 15px;
         vertical-align: middle;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
     }
 
     .status-badge {
@@ -104,6 +132,22 @@
     .status-completed {
         background: #20c997;
         color: white;
+    }
+
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        cursor: pointer;
     }
 
     .btn-sm {
@@ -151,6 +195,17 @@
             border-color: #545b62;
         }
 
+    .btn-info {
+        color: #fff;
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
     .btn-success {
         color: #fff;
         background-color: #28a745;
@@ -184,16 +239,17 @@
             border-color: #bd2130;
         }
 
-    .btn-info {
-        color: #fff;
-        background-color: #17a2b8;
-        border-color: #17a2b8;
+    .badge-secondary {
+        background: #6c757d;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
     }
 
-        .btn-info:hover {
-            background-color: #138496;
-            border-color: #117a8b;
-        }
+    .text-muted {
+        color: #6c757d !important;
+    }
 
     .container {
         width: 100%;
@@ -222,22 +278,6 @@
     .py-5 {
         padding-top: 3rem !important;
         padding-bottom: 3rem !important;
-    }
-
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    .badge-secondary {
-        background: #6c757d;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 0.75rem;
-    }
-
-    .text-muted {
-        color: #6c757d !important;
     }
 
     .row {
@@ -269,6 +309,12 @@
         border-color: #c3e6cb;
     }
 
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
     .alert-dismissible {
         padding-right: 4rem;
     }
@@ -284,46 +330,6 @@
         background: transparent;
         border: 0;
         padding: 0;
-        cursor: pointer;
-    }
-
-    .filter-section {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
-
-    .filter-select {
-        display: inline-block;
-        margin-right: 10px;
-    }
-
-    .form-control {
-        display: block;
-        width: 100%;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-    }
-
-    .btn {
-        display: inline-block;
-        font-weight: 400;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        user-select: none;
-        border: 1px solid transparent;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        border-radius: 0.25rem;
-        text-decoration: none;
         cursor: pointer;
     }
 
@@ -361,8 +367,7 @@
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fa fa-check-circle"></i>
-            @TempData["Success"]
+            <i class="fa fa-check-circle"></i> @TempData["Success"]
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -372,8 +377,7 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-circle"></i>
-            @TempData["Error"]
+            <i class="fa fa-exclamation-circle"></i> @TempData["Error"]
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -381,13 +385,17 @@
     }
 
     <div class="page-header">
-        <h2>
-            <i class="fa fa-recycle"></i>
-            Disposal Requests
-        </h2>
+        <h2><i class="fa fa-recycle"></i> Disposal Requests</h2>
         <p>Manage asset disposal requests and approvals.</p>
+        @if (User.IsInRole("FinanceOfficer"))
+        {
+            <p class="text-white-50" style="font-size: 0.9rem; margin-top: 5px;">
+                <i class="fa fa-info-circle"></i> You have <strong>@ViewBag.PendingCount</strong> pending disposal requests awaiting your review.
+            </p>
+        }
     </div>
 
+    <!-- Statistics -->
     <div class="row mb-4">
         <div class="col-md-2">
             <div class="stat-card" style="border-left-color: #0f4c81;">
@@ -428,7 +436,7 @@
     </div>
 
     <div class="card-box">
-
+        <!-- Filter Section -->
         <div class="filter-section">
             <div class="form-inline">
                 <div class="filter-select">
@@ -465,8 +473,7 @@
                     {
                         using (var db = new ApplicationDbContext())
                         {
-                            var userManager = new UserManager<ApplicationUser>(
-                                new UserStore<ApplicationUser>(db));
+                            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
                             foreach (var item in Model)
                             {
@@ -475,45 +482,39 @@
                                 var asset = db.Assets.Find(item.AssetId);
 
                                 <tr>
+                                    <td><strong>#@item.DisposalRequestId</strong></td>
                                     <td>
-                                        <strong>#@item.DisposalRequestId</strong>
+                                        <i class="fa fa-box"></i> @(asset?.AssetName ?? "Unknown")
+                                        <br /><small class="text-muted">@(asset?.AssetNumber ?? "N/A")</small>
                                     </td>
-                                    <td>
-                                        <i class="fa fa-box"></i>
-                                        @(asset?.AssetName ?? "Unknown")
-                                        <br />
-                                        <small class="text-muted">@(asset?.AssetNumber ?? "N/A")</small>
-                                    </td>
-                                    <td>
-                                        @(requestedBy?.UserName ?? "Unknown")
-                                    </td>
-                                    <td>
-                                        <span class="badge-secondary">@(item.DisposalMethod ?? "Pending")</span>
-                                    </td>
-                                    <td>
-                                        <span class="status-badge @statusClass">
-                                            <i class="fa fa-circle"></i>
-                                            @item.Status
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @item.RequestDate.ToString("dd MMM yyyy")
-                                    </td>
+                                    <td>@(requestedBy?.UserName ?? "Unknown")</td>
+                                    <td><span class="badge-secondary">@(item.DisposalMethod ?? "Pending")</span></td>
+                                    <td><span class="status-badge @statusClass"><i class="fa fa-circle"></i> @item.Status</span></td>
+                                    <td>@item.RequestDate.ToString("dd MMM yyyy")</td>
                                     <td>
                                         <div class="action-buttons">
+                                            <!-- View Details -->
                                             <a href="@Url.Action("Details", "Disposal", new { id = item.DisposalRequestId })"
-                                               class="btn btn-info btn-sm"
-                                               title="View Details">
+                                               class="btn btn-info btn-sm" title="View Details">
                                                 <i class="fa fa-eye"></i>
                                             </a>
 
+                                            <!-- Finance Review (Finance Officer only) -->
+                                            @if (User.IsInRole("FinanceOfficer") && item.Status == "Pending")
+                                            {
+                                                <a href="@Url.Action("FinanceReview", "Disposal", new { id = item.DisposalRequestId })"
+                                                   class="btn btn-primary btn-sm" title="Review Request">
+                                                    <i class="fa fa-coins"></i>
+                                                </a>
+                                            }
+
+                                            <!-- Admin / Asset Manager Actions -->
                                             @if (User.IsInRole("Admin") || User.IsInRole("AssetManager"))
                                             {
                                                 if (item.Status == "Pending" || item.Status == "Reviewed")
                                                 {
                                                     <a href="@Url.Action("Review", "Disposal", new { id = item.DisposalRequestId })"
-                                                       class="btn btn-primary btn-sm"
-                                                       title="Review Request">
+                                                       class="btn btn-primary btn-sm" title="Review Request">
                                                         <i class="fa fa-search"></i>
                                                     </a>
                                                 }
@@ -521,8 +522,7 @@
                                                 if (item.Status == "Approved")
                                                 {
                                                     <a href="@Url.Action("Complete", "Disposal", new { id = item.DisposalRequestId })"
-                                                       class="btn btn-success btn-sm"
-                                                       title="Complete Disposal">
+                                                       class="btn btn-success btn-sm" title="Complete Disposal">
                                                         <i class="fa fa-check-double"></i>
                                                     </a>
                                                 }
@@ -561,4 +561,3 @@
         window.location.href = url;
     }
 </script>
-
