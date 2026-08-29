@@ -1,8 +1,8 @@
-@using Municipality_System_Administration.Models
+﻿@using Municipality_System_Administration.Models
 @model Municipality_System_Administration.Models.Asset
 
 @{
-    ViewBag.Title = "Request Disposal";
+    ViewBag.Title = "Request Repair";
 }
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
@@ -89,20 +89,20 @@
         font-size: 1rem;
         line-height: 1.5;
         border-radius: 0.25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         text-decoration: none;
         cursor: pointer;
     }
 
-    .btn-warning {
-        color: #212529;
+    .btn-primary {
+        color: #fff;
         background-color: #fd7e14;
         border-color: #fd7e14;
     }
 
-        .btn-warning:hover {
+        .btn-primary:hover {
             background-color: #e06b0a;
             border-color: #d3690a;
-            color: white;
         }
 
     .btn-secondary {
@@ -209,6 +209,67 @@
         margin-bottom: 20px;
     }
 
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-available {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-assigned {
+        background: #007bff;
+        color: white;
+    }
+
+    .status-pendingrepair {
+        background: #fd7e14;
+        color: white;
+    }
+
+    .condition-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .condition-new {
+        background: #28a745;
+        color: white;
+    }
+
+    .condition-excellent {
+        background: #20c997;
+        color: white;
+    }
+
+    .condition-good {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .condition-fair {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .condition-poor {
+        background: #fd7e14;
+        color: white;
+    }
+
+    .condition-damaged {
+        background: #dc3545;
+        color: white;
+    }
+
     @@media (max-width: 768px) {
         .col-md-6 {
             flex: 0 0 100%;
@@ -222,7 +283,8 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-circle"></i> @TempData["Error"]
+            <i class="fa fa-exclamation-circle"></i>
+            @TempData["Error"]
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -230,8 +292,11 @@
     }
 
     <div class="header">
-        <h2><i class="fa fa-recycle"></i> Request Disposal</h2>
-        <p>Submit a disposal request for asset: <strong>@Model.AssetNumber</strong></p>
+        <h2>
+            <i class="fa fa-tools"></i>
+            Request Repair
+        </h2>
+        <p>Submit a repair request for this asset.</p>
     </div>
 
     <div class="card-custom">
@@ -240,11 +305,11 @@
         {
             <div class="info-box">
                 <i class="fa fa-info-circle"></i>
-                <strong>Note:</strong> This request will be sent for review and approval.
-                The disposal will only be completed after formal approval.
+                <strong>Note:</strong> Assets with condition "Poor" or "Damaged" require repair.
+                A technician will be assigned to assess and fix the asset.
             </div>
 
-            using (Html.BeginForm("Request", "Disposal", new { id = Model.AssetId }, FormMethod.Post))
+            using (Html.BeginForm("RequestRepair", "Assets", new { id = Model.AssetId }, FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.AssetId)
@@ -268,16 +333,27 @@
                         </div>
                         <div class="col-md-6">
                             <div class="asset-info-item">
-                                <span class="asset-info-label">Brand/Model:</span>
-                                <strong>@Model.Brand @(!string.IsNullOrEmpty(Model.Model) ? "/ " + Model.Model : "")</strong>
-                            </div>
-                            <div class="asset-info-item">
-                                <span class="asset-info-label">Condition:</span>
-                                <strong>@Model.Condition</strong>
+                                <span class="asset-info-label">Current Condition:</span>
+                                @{
+                                    string conditionClass = "condition-" + (Model.Condition?.ToLower() ?? "good");
+                                }
+                                <span class="condition-badge @conditionClass">
+                                    @Model.Condition
+                                </span>
                             </div>
                             <div class="asset-info-item">
                                 <span class="asset-info-label">Current Status:</span>
-                                <strong>@Model.Status</strong>
+                                @{
+                                    string statusClass = "status-" + (Model.Status?.ToLower().Replace(" ", "") ?? "available");
+                                }
+                                <span class="status-badge @statusClass">
+                                    <i class="fa fa-circle"></i>
+                                    @Model.Status
+                                </span>
+                            </div>
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Location:</span>
+                                <strong>@(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</strong>
                             </div>
                         </div>
                     </div>
@@ -285,36 +361,45 @@
 
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="DisposalMethod" class="required">Disposal Method</label>
-                            @Html.DropDownList("DisposalMethod", (SelectList)ViewBag.DisposalMethods, "-- Select Method --", new { @class = "form-control" })
-                            @Html.ValidationMessage("DisposalMethod", "", new { @class = "text-danger" })
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle"></i>
-                                How should this asset be disposed?
-                            </small>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="Reason" class="required">Reason for Disposal</label>
-                            <textarea name="Reason" class="form-control" rows="3" placeholder="Provide a detailed reason for disposing this asset..." required></textarea>
-                            @Html.ValidationMessage("Reason", "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="RepairAssignedToUserId" class="required">Assign Technician</label>
+                    @if (ViewBag.TechnicianList != null)
+                    {
+                        @Html.DropDownList("RepairAssignedToUserId", (SelectList)ViewBag.TechnicianList, "-- Select Technician --", new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        <select class="form-control" id="RepairAssignedToUserId" name="RepairAssignedToUserId">
+                            <option value="">-- No technicians available --</option>
+                        </select>
+                    }
+                    @Html.ValidationMessage("RepairAssignedToUserId", "", new { @class = "text-danger" })
+                    <small class="text-muted">
+                        <i class="fa fa-info-circle"></i>
+                        Only active technicians will be shown.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="RepairReport">Repair Description / Problem Report</label>
+                    <textarea name="RepairReport" class="form-control" rows="4" placeholder="Describe the issue with the asset..."></textarea>
+                    <small class="text-muted">
+                        <i class="fa fa-info-circle"></i>
+                        Provide details about what needs to be repaired.
+                    </small>
                 </div>
 
                 <hr />
 
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="fa fa-paper-plane"></i> Submit Disposal Request
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-paper-plane"></i>
+                            Submit Repair Request
                         </button>
-                        <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary btn-lg">
-                            <i class="fa fa-arrow-left"></i> Cancel
+                        <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                            <i class="fa fa-arrow-left"></i>
+                            Cancel
                         </a>
                     </div>
                 </div>
@@ -323,10 +408,12 @@
         else
         {
             <div class="alert alert-danger">
-                <i class="fa fa-exclamation-circle"></i> Asset not found or has been deleted.
+                <i class="fa fa-exclamation-circle"></i>
+                Asset not found or has been deleted.
             </div>
-            <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i> Back to Assets
+            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i>
+                Back to List
             </a>
         }
 

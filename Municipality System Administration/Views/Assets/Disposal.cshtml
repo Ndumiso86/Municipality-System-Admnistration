@@ -1,8 +1,7 @@
-@using Municipality_System_Administration.Models
-@model Municipality_System_Administration.Models.Asset
+﻿@model Municipality_System_Administration.Models.Asset
 
 @{
-    ViewBag.Title = "Request Disposal";
+    ViewBag.Title = "Dispose Asset";
 }
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
@@ -209,6 +208,14 @@
         margin-bottom: 20px;
     }
 
+    .warning-box {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
     @@media (max-width: 768px) {
         .col-md-6 {
             flex: 0 0 100%;
@@ -222,7 +229,8 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-circle"></i> @TempData["Error"]
+            <i class="fa fa-exclamation-circle"></i>
+            @TempData["Error"]
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -230,21 +238,35 @@
     }
 
     <div class="header">
-        <h2><i class="fa fa-recycle"></i> Request Disposal</h2>
-        <p>Submit a disposal request for asset: <strong>@Model.AssetNumber</strong></p>
+        <h2>
+            <i class="fa fa-recycle"></i>
+            Dispose Asset
+        </h2>
+        <p>Formally dispose of asset: <strong>@Model.AssetNumber</strong></p>
     </div>
 
     <div class="card-custom">
 
         @if (Model != null)
         {
-            <div class="info-box">
-                <i class="fa fa-info-circle"></i>
-                <strong>Note:</strong> This request will be sent for review and approval.
-                The disposal will only be completed after formal approval.
+            <div class="warning-box">
+                <h5 class="text-danger">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    Confirm Disposal
+                </h5>
+                <p class="mb-0">
+                    This will mark the asset as <strong>"Disposed"</strong>. The asset will remain in the system
+                    for audit purposes but will no longer be available for assignment.
+                </p>
+                <p class="mt-2 mb-0 text-muted">
+                    <small>
+                        <i class="fa fa-info-circle"></i>
+                        If you want to permanently remove the asset, use the <strong>Delete</strong> option instead.
+                    </small>
+                </p>
             </div>
 
-            using (Html.BeginForm("Request", "Disposal", new { id = Model.AssetId }, FormMethod.Post))
+            using (Html.BeginForm("Disposal", "Assets", new { id = Model.AssetId }, FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.AssetId)
@@ -268,13 +290,27 @@
                         </div>
                         <div class="col-md-6">
                             <div class="asset-info-item">
-                                <span class="asset-info-label">Brand/Model:</span>
-                                <strong>@Model.Brand @(!string.IsNullOrEmpty(Model.Model) ? "/ " + Model.Model : "")</strong>
+                                <span class="asset-info-label">Brand:</span>
+                                <strong>@(string.IsNullOrEmpty(Model.Brand) ? "N/A" : Model.Brand)</strong>
                             </div>
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Model:</span>
+                                <strong>@(string.IsNullOrEmpty(Model.Model) ? "N/A" : Model.Model)</strong>
+                            </div>
+                            <div class="asset-info-item">
+                                <span class="asset-info-label">Serial Number:</span>
+                                <strong>@(string.IsNullOrEmpty(Model.SerialNumber) ? "N/A" : Model.SerialNumber)</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="asset-info-item">
                                 <span class="asset-info-label">Condition:</span>
                                 <strong>@Model.Condition</strong>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="asset-info-item">
                                 <span class="asset-info-label">Current Status:</span>
                                 <strong>@Model.Status</strong>
@@ -293,15 +329,18 @@
                             @Html.ValidationMessage("DisposalMethod", "", new { @class = "text-danger" })
                             <small class="text-muted">
                                 <i class="fa fa-info-circle"></i>
-                                How should this asset be disposed?
+                                How is the asset being disposed?
                             </small>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="Reason" class="required">Reason for Disposal</label>
-                            <textarea name="Reason" class="form-control" rows="3" placeholder="Provide a detailed reason for disposing this asset..." required></textarea>
-                            @Html.ValidationMessage("Reason", "", new { @class = "text-danger" })
+                            <label for="DisposalNotes">Disposal Notes</label>
+                            <textarea name="DisposalNotes" class="form-control" rows="3" placeholder="Additional notes about the disposal..."></textarea>
+                            <small class="text-muted">
+                                <i class="fa fa-info-circle"></i>
+                                Any additional information about the disposal.
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -311,10 +350,12 @@
                 <div class="row">
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="fa fa-paper-plane"></i> Submit Disposal Request
+                            <i class="fa fa-recycle"></i>
+                            Confirm Disposal
                         </button>
-                        <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary btn-lg">
-                            <i class="fa fa-arrow-left"></i> Cancel
+                        <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                            <i class="fa fa-arrow-left"></i>
+                            Cancel
                         </a>
                     </div>
                 </div>
@@ -323,10 +364,12 @@
         else
         {
             <div class="alert alert-danger">
-                <i class="fa fa-exclamation-circle"></i> Asset not found or has been deleted.
+                <i class="fa fa-exclamation-circle"></i>
+                Asset not found or has been deleted.
             </div>
-            <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i> Back to Assets
+            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i>
+                Back to List
             </a>
         }
 
@@ -337,3 +380,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+

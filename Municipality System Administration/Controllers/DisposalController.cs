@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Municipality_System_Administration.Models;
 using System;
@@ -24,6 +24,7 @@ namespace Municipality_System_Administration.Controllers
             {
                 requests = requests.Where(r => r.Status == "Pending");
             }
+
             if (!string.IsNullOrEmpty(status) && status != "All")
             {
                 requests = requests.Where(r => r.Status == status);
@@ -36,7 +37,9 @@ namespace Municipality_System_Administration.Controllers
             // Statistics
             ViewBag.TotalRequests = db.DisposalRequests.Count();
             ViewBag.PendingCount = db.DisposalRequests.Count(r => r.Status == "Pending");
+            ViewBag.ReviewedCount = db.DisposalRequests.Count(r => r.Status == "Reviewed");
             ViewBag.ApprovedCount = db.DisposalRequests.Count(r => r.Status == "Approved");
+            ViewBag.CompletedCount = db.DisposalRequests.Count(r => r.Status == "Completed");
             ViewBag.RejectedCount = db.DisposalRequests.Count(r => r.Status == "Rejected");
             ViewBag.SelectedStatus = status;
 
@@ -61,7 +64,7 @@ namespace Municipality_System_Administration.Controllers
             }
 
             var existingRequest = db.DisposalRequests
-                .FirstOrDefault(r => r.AssetId == id && r.Status == "Pending");
+                .FirstOrDefault(r => r.AssetId == id && r.Status != "Completed" && r.Status != "Rejected");
 
             if (existingRequest != null)
             {
@@ -70,14 +73,14 @@ namespace Municipality_System_Administration.Controllers
             }
 
             var disposalMethods = new SelectList(new List<string>
-    {
-        "Auction",
-        "Scrap",
-        "Donation",
-        "Recycle",
-        "Trade-in",
-        "Write-off"
-    });
+            {
+                "Auction",
+                "Scrap",
+                "Donation",
+                "Recycle",
+                "Trade-in",
+                "Write-off"
+            });
 
             ViewBag.DisposalMethods = disposalMethods;
             ViewBag.Asset = asset;
@@ -140,13 +143,13 @@ namespace Municipality_System_Administration.Controllers
 
             db.SaveChanges();
 
-            TempData["Success"] = $"Disposal request submitted for '{asset.AssetName}'. Awaiting Finance Officer approval.";
+            TempData["Success"] = $"Disposal request submitted for '{asset.AssetName}'. Awaiting review.";
             return RedirectToAction("Index", "Assets");
         }
 
-        [Authorize(Roles = "FinanceOfficer")]
+        [Authorize(Roles = "Admin, AssetManager, FinanceOfficer")]
         [HttpGet]
-        public ActionResult FinanceReview(int id)
+        public ActionResult Review(int id)
         {
             var request = db.DisposalRequests.Find(id);
             if (request == null)
@@ -155,19 +158,31 @@ namespace Municipality_System_Administration.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (request.Status != "Pending")
+            if (request.Status != "Pending" && request.Status != "Reviewed")
             {
                 TempData["Error"] = "This request has already been reviewed.";
                 return RedirectToAction("Index");
             }
+
+            var disposalMethods = new SelectList(new List<string>
+            {
+                "Auction",
+                "Scrap",
+                "Donation",
+                "Recycle",
+                "Trade-in",
+                "Write-off"
+            });
+
+            ViewBag.DisposalMethods = disposalMethods;
 
             return View(request);
         }
 
-        [Authorize(Roles = "FinanceOfficer")]
+        [Authorize(Roles = "Admin, AssetManager, FinanceOfficer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FinanceReview(int id, string FinanceReviewNotes, string Action, decimal? DisposalValue)
+        public ActionResult Review(int id, string ReviewNotes, string Action, string DisposalMethod, decimal? DisposalValue)
         {
             var request = db.DisposalRequests.Find(id);
             if (request == null)
@@ -176,19 +191,32 @@ namespace Municipality_System_Administration.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (request.Status != "Pending")
+            if (request.Status != "Pending" && request.Status != "Reviewed")
             {
                 TempData["Error"] = "This request has already been reviewed.";
                 return RedirectToAction("Index");
             }
 
-            request.FinanceReviewedByUserId = User.Identity.GetUserId();
-            request.FinanceReviewDate = DateTime.Now;
-            request.FinanceReviewNotes = FinanceReviewNotes;
+            request.ReviewedByUserId = User.Identity.GetUserId();
+            request.ReviewedDate = DateTime.Now;
+            request.ReviewNotes = ReviewNotes;
 
             if (Action == "Approve")
             {
+                if (string.IsNullOrEmpty(DisposalMethod))
+                {
+                    ModelState.AddModelError("", "Please select a disposal method.");
+                    ViewBag.DisposalMethods = new SelectList(new List<string>
+                    {
+                        "Auction", "Scrap", "Donation", "Recycle", "Trade-in", "Write-off"
+                    });
+                    return View(request);
+                }
+
                 request.Status = "Approved";
+                request.ApprovalDate = DateTime.Now;
+                request.ApprovedByUserId = User.Identity.GetUserId();
+                request.DisposalMethod = DisposalMethod;
                 request.DisposalValue = DisposalValue;
 
                 var asset = db.Assets.Find(request.AssetId);
@@ -200,29 +228,32 @@ namespace Municipality_System_Administration.Controllers
 
                     asset.Notes = (asset.Notes ?? "") + "\n" +
                         DateTime.Now.ToString("dd MMM yyyy HH:mm") +
-                        " - Disposal Approved by Finance: " + User.Identity.Name +
-                        " - Method: " + request.DisposalMethod +
+                        " - Disposal Approved by: " + User.Identity.Name +
+                        " - Method: " + DisposalMethod +
                         (DisposalValue.HasValue ? " - Value: " + DisposalValue.Value.ToString("C2") : "") +
-                        (string.IsNullOrEmpty(FinanceReviewNotes) ? "" : " - Notes: " + FinanceReviewNotes);
+                        (string.IsNullOrEmpty(ReviewNotes) ? "" : " - Notes: " + ReviewNotes);
                 }
 
-                db.SaveChanges();
-
-                TempData["Success"] = $"Disposal request #{request.DisposalRequestId} has been approved by Finance. Asset '{asset?.AssetName}' has been disposed.";
+                TempData["Success"] = $"Disposal request #{request.DisposalRequestId} has been approved. Method: {DisposalMethod}.";
+            }
+            else if (Action == "Reject")
+            {
+                request.Status = "Rejected";
+                TempData["Success"] = $"Disposal request #{request.DisposalRequestId} has been rejected.";
             }
             else
             {
-                request.Status = "Rejected";
-                db.SaveChanges();
-
-                TempData["Success"] = $"Disposal request #{request.DisposalRequestId} has been rejected by Finance.";
+                request.Status = "Reviewed";
+                TempData["Success"] = $"Disposal request #{request.DisposalRequestId} has been reviewed. Awaiting final approval.";
             }
 
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin, AssetManager")]
         [HttpGet]
-        public ActionResult Details(int id)
+        public ActionResult Complete(int id)
         {
             var request = db.DisposalRequests.Find(id);
             if (request == null)
@@ -231,18 +262,45 @@ namespace Municipality_System_Administration.Controllers
                 return RedirectToAction("Index");
             }
 
+            if (request.Status != "Approved")
+            {
+                TempData["Error"] = "This request must be approved before it can be completed.";
+                return RedirectToAction("Index");
+            }
+
             return View(request);
         }
 
-        protected override void Dispose(bool disposing)
+        [Authorize(Roles = "Admin, AssetManager")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Complete(int id, string CompletionNotes)
         {
-            if (disposing)
+            var request = db.DisposalRequests.Find(id);
+            if (request == null)
             {
-                db.Dispose();
+                TempData["Error"] = "Request not found.";
+                return RedirectToAction("Index");
             }
-            base.Dispose(disposing);
-        }
 
+            request.Status = "Completed";
+            request.CompletionDate = DateTime.Now;
+            request.CompletionNotes = CompletionNotes;
+
+            var asset = db.Assets.Find(request.AssetId);
+            if (asset != null)
+            {
+                asset.Notes = (asset.Notes ?? "") + "\n" +
+                    DateTime.Now.ToString("dd MMM yyyy HH:mm") +
+                    " - Disposal Completed: " +
+                    (string.IsNullOrEmpty(CompletionNotes) ? "" : " - " + CompletionNotes);
+            }
+
+            db.SaveChanges();
+
+            TempData["Success"] = $"Disposal request #{request.DisposalRequestId} has been completed.";
+            return RedirectToAction("Index");
+        }
 
         [Authorize(Roles = "Admin, AssetManager")]
         [HttpGet]
@@ -283,5 +341,26 @@ namespace Municipality_System_Administration.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public ActionResult Details(int id)
+        {
+            var request = db.DisposalRequests.Find(id);
+            if (request == null)
+            {
+                TempData["Error"] = "Request not found.";
+                return RedirectToAction("Index");
+            }
+
+            return View(request);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

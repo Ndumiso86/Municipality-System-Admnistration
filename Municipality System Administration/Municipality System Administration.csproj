@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
@@ -231,10 +231,17 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminDashboardController.cs" />
+    <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\DepartmentHeadController.cs" />
     <Compile Include="Controllers\DisposalController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
+    <Compile Include="Controllers\TechnicianController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -321,12 +328,54 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\AdminDashboard\Index.cshtml" />
+    <Content Include="Views\Department\Index.cshtml" />
+    <Content Include="Views\Department\Create.cshtml" />
+    <Content Include="Views\Department\Details.cshtml" />
+    <Content Include="Views\Department\Edit.cshtml" />
+    <Content Include="Views\Department\Delete.cshtml" />
+    <Content Include="Views\Staff\Index.cshtml" />
+    <Content Include="Views\Staff\Create.cshtml" />
+    <Content Include="Views\Staff\Edit.cshtml" />
+    <Content Include="Views\Staff\Details.cshtml" />
+    <Content Include="Views\Staff\Delete.cshtml" />
     <Content Include="Views\Shared\FinanceOfficerMenu.cshtml" />
     <Content Include="Views\Finance\AssetDepreciation.cshtml" />
     <Content Include="Views\Finance\DepreciationReport.cshtml" />
+    <Content Include="Views\Assets\Index.cshtml" />
+    <Content Include="Views\Assets\Create.cshtml" />
+    <Content Include="Views\Assets\Edit.cshtml" />
+    <Content Include="Views\Assets\Details.cshtml" />
+    <Content Include="Views\Assets\Delete.cshtml" />
+    <Content Include="Views\Assets\Assign.cshtml" />
+    <Content Include="Views\Assets\Unassign.cshtml" />
+    <Content Include="Views\Staff\ResetPassword.cshtml" />
+    <Content Include="Views\Technician\Dashboard.cshtml" />
+    <Content Include="Views\Technician\RepairQueue.cshtml" />
+    <Content Include="Views\Technician\StartRepair.cshtml" />
+    <Content Include="Views\Technician\CompleteRepair.cshtml" />
+    <Content Include="Views\Staff\MyProfile.cshtml" />
+    <Content Include="Views\Technician\RepairHistory.cshtml" />
+    <Content Include="Views\Assets\RequestRepair.cshtml" />
+    <Content Include="Views\Assets\UpdateStatus.cshtml" />
+    <Content Include="Views\Assets\Decommission.cshtml" />
+    <Content Include="Views\DepartmentHead\Dashboard.cshtml" />
+    <Content Include="Views\DepartmentHead\PendingRepairs.cshtml" />
+    <Content Include="Views\DepartmentHead\RepairHistory.cshtml" />
+    <Content Include="Views\DepartmentHead\StaffReport.cshtml" />
+    <Content Include="Views\DepartmentHead\ApproveRepair.cshtml" />
+    <Content Include="Views\DepartmentHead\RejectRepair.cshtml" />
+    <Content Include="Views\Assets\AssignTechnician.cshtml" />
+    <Content Include="Views\Assets\ApproveRepair.cshtml" />
+    <Content Include="Views\Maintenance\Index.cshtml" />
+    <Content Include="Views\Maintenance\Schedule.cshtml" />
+    <Content Include="Views\Maintenance\Record.cshtml" />
+    <Content Include="Views\Maintenance\Details.cshtml" />
+    <Content Include="Views\Assets\Disposal.cshtml" />
+    <Content Include="Views\Disposal\Request.cshtml" />
     <Content Include="Views\Disposal\Review.cshtml" />
     <Content Include="Views\Disposal\Index.cshtml" />
-    <Content Include="Views\Disposal\Request.cshtml" />
+    <Content Include="Views\Assets\MyAssets.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -397,10 +446,4 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target> -->
 </Project>

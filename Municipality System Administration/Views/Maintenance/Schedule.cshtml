@@ -1,8 +1,7 @@
-@using Municipality_System_Administration.Models
-@model Municipality_System_Administration.Models.Asset
+﻿@model Municipality_System_Administration.Models.Asset
 
 @{
-    ViewBag.Title = "Request Disposal";
+    ViewBag.Title = "Schedule Maintenance";
 }
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
@@ -13,7 +12,7 @@
     }
 
     .header {
-        background: linear-gradient(135deg, #fd7e14, #e06b0a);
+        background: linear-gradient(135deg, #0f4c81, #1f7a8c);
         color: white;
         padding: 25px;
         border-radius: 12px;
@@ -89,20 +88,20 @@
         font-size: 1rem;
         line-height: 1.5;
         border-radius: 0.25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         text-decoration: none;
         cursor: pointer;
     }
 
-    .btn-warning {
-        color: #212529;
-        background-color: #fd7e14;
-        border-color: #fd7e14;
+    .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
     }
 
-        .btn-warning:hover {
-            background-color: #e06b0a;
-            border-color: #d3690a;
-            color: white;
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
         }
 
     .btn-secondary {
@@ -203,7 +202,7 @@
 
     .info-box {
         background: #e8f4fd;
-        border-left: 4px solid #fd7e14;
+        border-left: 4px solid #0f4c81;
         padding: 15px;
         border-radius: 8px;
         margin-bottom: 20px;
@@ -222,7 +221,8 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-circle"></i> @TempData["Error"]
+            <i class="fa fa-exclamation-circle"></i>
+            @TempData["Error"]
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -230,8 +230,11 @@
     }
 
     <div class="header">
-        <h2><i class="fa fa-recycle"></i> Request Disposal</h2>
-        <p>Submit a disposal request for asset: <strong>@Model.AssetNumber</strong></p>
+        <h2>
+            <i class="fa fa-calendar-plus"></i>
+            Schedule Maintenance
+        </h2>
+        <p>Schedule maintenance for asset: <strong>@Model.AssetNumber</strong></p>
     </div>
 
     <div class="card-custom">
@@ -240,11 +243,11 @@
         {
             <div class="info-box">
                 <i class="fa fa-info-circle"></i>
-                <strong>Note:</strong> This request will be sent for review and approval.
-                The disposal will only be completed after formal approval.
+                <strong>Note:</strong> Scheduling maintenance will set the next maintenance date for this asset.
+                You will be reminded when maintenance is due.
             </div>
 
-            using (Html.BeginForm("Request", "Disposal", new { id = Model.AssetId }, FormMethod.Post))
+            using (Html.BeginForm("Schedule", "Maintenance", new { id = Model.AssetId }, FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.AssetId)
@@ -272,12 +275,12 @@
                                 <strong>@Model.Brand @(!string.IsNullOrEmpty(Model.Model) ? "/ " + Model.Model : "")</strong>
                             </div>
                             <div class="asset-info-item">
-                                <span class="asset-info-label">Condition:</span>
-                                <strong>@Model.Condition</strong>
+                                <span class="asset-info-label">Last Maintenance:</span>
+                                <strong>@(Model.LastMaintenanceDate?.ToString("dd MMM yyyy") ?? "Never")</strong>
                             </div>
                             <div class="asset-info-item">
-                                <span class="asset-info-label">Current Status:</span>
-                                <strong>@Model.Status</strong>
+                                <span class="asset-info-label">Next Maintenance:</span>
+                                <strong>@(Model.NextMaintenanceDate?.ToString("dd MMM yyyy") ?? "Not Scheduled")</strong>
                             </div>
                         </div>
                     </div>
@@ -288,20 +291,32 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="DisposalMethod" class="required">Disposal Method</label>
-                            @Html.DropDownList("DisposalMethod", (SelectList)ViewBag.DisposalMethods, "-- Select Method --", new { @class = "form-control" })
-                            @Html.ValidationMessage("DisposalMethod", "", new { @class = "text-danger" })
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle"></i>
-                                How should this asset be disposed?
-                            </small>
+                            <label for="NextMaintenanceDate" class="required">Next Maintenance Date</label>
+                            <input type="date" name="NextMaintenanceDate" class="form-control" value="@Model.NextMaintenanceDate?.ToString(" yyyy-MM-dd")" required />
+                            @Html.ValidationMessage("NextMaintenanceDate", "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="Reason" class="required">Reason for Disposal</label>
-                            <textarea name="Reason" class="form-control" rows="3" placeholder="Provide a detailed reason for disposing this asset..." required></textarea>
-                            @Html.ValidationMessage("Reason", "", new { @class = "text-danger" })
+                            <label for="MaintenanceFrequency">Maintenance Frequency (Months)</label>
+                            <input type="number" name="MaintenanceFrequency" class="form-control" placeholder="e.g., 6" min="1" max="60" value="@Model.MaintenanceFrequency" />
+                            <small class="text-muted">
+                                <i class="fa fa-info-circle"></i>
+                                How often maintenance should occur (in months).
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="MaintenanceNotes">Maintenance Notes</label>
+                            <textarea name="MaintenanceNotes" class="form-control" rows="3" placeholder="Add any notes about the maintenance schedule...">@Model.MaintenanceNotes</textarea>
+                            <small class="text-muted">
+                                <i class="fa fa-info-circle"></i>
+                                Any additional information about the maintenance schedule.
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -310,11 +325,13 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="fa fa-paper-plane"></i> Submit Disposal Request
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-save"></i>
+                            Schedule Maintenance
                         </button>
-                        <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary btn-lg">
-                            <i class="fa fa-arrow-left"></i> Cancel
+                        <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                            <i class="fa fa-arrow-left"></i>
+                            Cancel
                         </a>
                     </div>
                 </div>
@@ -323,10 +340,12 @@
         else
         {
             <div class="alert alert-danger">
-                <i class="fa fa-exclamation-circle"></i> Asset not found or has been deleted.
+                <i class="fa fa-exclamation-circle"></i>
+                Asset not found or has been deleted.
             </div>
-            <a href="@Url.Action("Index", "Assets")" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i> Back to Assets
+            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i>
+                Back to Maintenance
             </a>
         }
 

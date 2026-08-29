@@ -1,0 +1,186 @@
+﻿@model Municipality_System_Administration.Models.Department
+
+@{
+    ViewBag.Title = "Department Details";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+<style>
+
+    body {
+        background: #f4f7fb;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg,#0f4c81,#1f7a8c);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0,0,0,.08);
+    }
+
+    .info-title {
+        color: #0f4c81;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .badge-active {
+        background: #198754;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+    }
+
+    .badge-inactive {
+        background: #dc3545;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <div class="page-header">
+
+        <h2>
+
+            <i class="fa fa-building"></i>
+
+            Department Details
+
+        </h2>
+
+        <p>View municipality department information.</p>
+
+    </div>
+
+    <div class="card card-custom">
+
+        <div class="card-header bg-primary text-white">
+
+            Department Information
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <div class="info-title">
+
+                        Department Name
+
+                    </div>
+
+                    <div class="info-value">
+
+                        @Model.DepartmentName
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="info-title">
+
+                        Status
+
+                    </div>
+
+                    <div class="info-value">
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge-active">
+
+                                Active
+
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge-inactive">
+
+                                Inactive
+
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <div class="info-title">
+
+                Description
+
+            </div>
+
+            <div class="info-value">
+
+                @if (!String.IsNullOrWhiteSpace(Model.Description))
+                {
+                    @Model.Description
+                }
+                else
+                {
+                    <span class="text-muted">
+
+                        No description available.
+
+                    </span>
+                }
+
+            </div>
+
+            <hr />
+
+            <div class="mt-4">
+
+                <a href="@Url.Action("Edit", new { id = Model.DepartmentId })"
+                   class="btn btn-warning">
+
+                    <i class="fa fa-edit"></i>
+
+                    Edit
+
+                </a>
+
+                <a href="@Url.Action("Index")"
+                   class="btn btn-secondary">
+
+                    <i class="fa fa-arrow-left"></i>
+
+                    Back
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
