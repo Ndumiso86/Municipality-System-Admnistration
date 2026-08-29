@@ -1,0 +1,459 @@
+﻿@using Municipality_System_Administration.Models
+@using Municipality_System_Administration.Controllers
+@model IEnumerable<Municipality_System_Administration.Models.MaintenanceViewModel>
+
+@{
+    ViewBag.Title = "Maintenance Schedule";
+    var assetName = ViewBag.AssetName ?? "All Assets";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background: #f4f7fb;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #0f4c81, #1f7a8c);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card-box {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+    }
+
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+        border-left: 4px solid #0f4c81;
+        transition: transform 0.3s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .stat-number {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #0f4c81;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+
+    .table thead {
+        background: #0f4c81;
+        color: white;
+    }
+
+        .table thead th {
+            color: white;
+            padding: 12px 15px;
+        }
+
+    .table tbody td {
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-overdue {
+        background: #dc3545;
+        color: white;
+    }
+
+    .status-upcoming {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .status-ok {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-notscheduled {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-sm {
+        padding: 4px 10px;
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 4px;
+        text-decoration: none !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 30px;
+    }
+
+        .btn-sm i {
+            font-size: 13px;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+    .btn-secondary {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .btn-success {
+        color: #fff;
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+    .btn-warning {
+        color: #212529;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+    .btn-info {
+        color: #fff;
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .badge-secondary {
+        background: #6c757d;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .col-md-3 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+
+    .alert {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-dismissible {
+        padding-right: 4rem;
+    }
+
+    .close {
+        float: right;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        opacity: .5;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .back-link {
+        color: white;
+        text-decoration: none;
+        opacity: 0.8;
+    }
+
+        .back-link:hover {
+            opacity: 1;
+            color: white;
+        }
+
+    @@media (max-width: 768px) {
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .col-md-3 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .action-buttons .btn {
+            min-width: 28px;
+            height: 28px;
+            padding: 3px 8px;
+        }
+
+            .action-buttons .btn i {
+                font-size: 11px;
+            }
+    }
+</style>
+
+<div class="container mt-4">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa fa-check-circle"></i>
+            @TempData["Success"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="page-header">
+        <h2>
+            <i class="fa fa-wrench"></i>
+            Maintenance Schedule
+            <small style="font-size: 0.6rem; margin-left: 15px;">
+                <a href="@Url.Action("Index", "Assets")" class="back-link">
+                    <i class="fa fa-arrow-left"></i> Back to Assets
+                </a>
+            </small>
+        </h2>
+        <p>View and manage maintenance for: <strong>@assetName</strong></p>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stat-card" style="border-left-color: #28a745;">
+                <div class="stat-number">@ViewBag.TotalAssets</div>
+                <div class="stat-label"><i class="fa fa-boxes"></i> Total Assets</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="border-left-color: #ffc107;">
+                <div class="stat-number">@ViewBag.UpcomingCount</div>
+                <div class="stat-label"><i class="fa fa-clock"></i> Upcoming (30 days)</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="border-left-color: #dc3545;">
+                <div class="stat-number">@ViewBag.OverdueCount</div>
+                <div class="stat-label"><i class="fa fa-exclamation-triangle"></i> Overdue</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="border-left-color: #17a2b8;">
+                <div class="stat-number">@ViewBag.ScheduledCount</div>
+                <div class="stat-label"><i class="fa fa-calendar-check"></i> Scheduled</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-box">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="maintenanceTable">
+                <thead>
+                    <tr>
+                        <th>Asset No</th>
+                        <th>Asset Name</th>
+                        <th>Category</th>
+                        <th>Brand/Model</th>
+                        <th>Last Maintenance</th>
+                        <th>Next Maintenance</th>
+                        <th>Status</th>
+                        <th style="min-width: 180px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            string statusClass = "status-" + (item.Status?.ToLower().Replace(" ", "") ?? "notscheduled");
+                            string statusIcon = item.Status == "Overdue" ? "fa-exclamation-triangle" :
+                                               item.Status == "Upcoming" ? "fa-clock" :
+                                               item.Status == "OK" ? "fa-check-circle" : "fa-minus-circle";
+
+                            <tr>
+                                <td><strong>@item.AssetNumber</strong></td>
+                                <td><i class="fa fa-box"></i> @item.AssetName</td>
+                                <td><span class="badge-secondary">@item.Category</span></td>
+                                <td>
+                                    @item.Brand
+                                    @if (!string.IsNullOrEmpty(item.Model))
+                                    {
+                                        <small class="text-muted">/ @item.Model</small>
+                                    }
+                                </td>
+                                <td>@(item.LastMaintenanceDate?.ToString("dd MMM yyyy") ?? "Never")</td>
+                                <td>@(item.NextMaintenanceDate?.ToString("dd MMM yyyy") ?? "Not Scheduled")</td>
+                                <td>
+                                    <span class="status-badge @statusClass">
+                                        <i class="fa @statusIcon"></i> @item.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        @if (User.IsInRole("Admin") || User.IsInRole("AssetManager"))
+                                        {
+                                            <a href="@Url.Action("Schedule", "Maintenance", new { id = item.AssetId })"
+                                               class="btn btn-primary btn-sm" title="Schedule Maintenance">
+                                                <i class="fa fa-calendar-plus"></i>
+                                            </a>
+                                            <a href="@Url.Action("Record", "Maintenance", new { id = item.AssetId })"
+                                               class="btn btn-success btn-sm" title="Record Maintenance">
+                                                <i class="fa fa-clipboard-check"></i>
+                                            </a>
+                                        }
+                                        @if (User.IsInRole("Admin") || User.IsInRole("AssetManager") || User.IsInRole("Technician"))
+                                        {
+                                            <a href="@Url.Action("Details", "Maintenance", new { id = item.AssetId })"
+                                               class="btn btn-info btn-sm" title="View History">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        }
+                                        <a href="@Url.Action("Details", "Assets", new { id = item.AssetId })"
+                                           class="btn btn-secondary btn-sm" title="View Asset">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8">
+                                <div class="text-center py-5">
+                                    <i class="fa fa-calendar-check fa-3x text-muted mb-3"></i>
+                                    <h4>No maintenance records found</h4>
+                                    <p class="text-muted">No assets have been scheduled for maintenance yet.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#searchInput').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                $('#maintenanceTable tbody tr').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+}
+

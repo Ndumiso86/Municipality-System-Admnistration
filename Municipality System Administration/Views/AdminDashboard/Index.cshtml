@@ -1,0 +1,404 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+
+
+<div class="dashboard-header">
+
+    <h1>
+        <i class="fa-solid fa-chart-line"></i>
+        Administration Dashboard
+    </h1>
+
+    <p>
+        Welcome back, @User.Identity.Name
+    </p>
+
+</div>
+
+
+
+<div class="row mt-4">
+
+
+
+    <!-- Staff -->
+
+    <div class="col-md-3">
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <h3>
+                Staff
+            </h3>
+
+            <h2>
+                0
+            </h2>
+
+            <a href="@Url.Action("Index","Staff")">
+                Manage Staff
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- Assets -->
+
+    <div class="col-md-3">
+
+
+        <div class="dashboard-card">
+
+
+            <div class="card-icon">
+                <i class="fa-solid fa-building"></i>
+            </div>
+
+
+            <h3>
+                Assets
+            </h3>
+
+
+            <h2>
+                0
+            </h2>
+
+
+            <a href="#">
+                Manage Assets
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- Departments -->
+
+    <div class="col-md-3">
+
+
+        <div class="dashboard-card">
+
+
+            <div class="card-icon">
+                <i class="fa-solid fa-sitemap"></i>
+            </div>
+
+
+            <h3>
+                Departments
+            </h3>
+
+
+            <h2>
+                0
+            </h2>
+
+
+            <a href="#">
+                Manage Departments
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- Finance -->
+
+    <div class="col-md-3">
+
+
+        <div class="dashboard-card">
+
+
+            <div class="card-icon">
+                <i class="fa-solid fa-money-bill"></i>
+            </div>
+
+
+            <h3>
+                Finance
+            </h3>
+
+
+            <h2>
+                R0
+            </h2>
+
+
+            <a href="#">
+                View Finance
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- Quick Actions -->
+
+
+<div class="row mt-5">
+
+
+    <div class="col-md-12">
+
+
+        <div class="quick-panel">
+
+
+            <h3>
+                <i class="fa-solid fa-bolt"></i>
+                Quick Actions
+            </h3>
+
+
+
+            <div class="row">
+
+
+                <div class="col-md-3">
+
+                    <a class="quick-button"
+                       href="@Url.Action("Create","Staff")">
+
+                        <i class="fa-solid fa-user-plus"></i>
+
+                        Add Staff
+
+                    </a>
+
+                </div>
+
+
+
+                <div class="col-md-3">
+
+                    <a class="quick-button"
+                       href="#">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        Add Asset
+
+                    </a>
+
+                </div>
+
+
+
+
+                <div class="col-md-3">
+
+                    <a class="quick-button"
+                       href="#">
+
+                        <i class="fa-solid fa-building-user"></i>
+
+                        Departments
+
+                    </a>
+
+                </div>
+
+
+
+
+                <div class="col-md-3">
+
+                    <a class="quick-button"
+                       href="#">
+
+                        <i class="fa-solid fa-file-chart-column"></i>
+
+                        Reports
+
+                    </a>
+
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- Recent Activity -->
+
+
+<div class="row mt-4">
+
+
+    <div class="col-md-12">
+
+
+        <div class="activity-box">
+
+
+            <h3>
+
+                <i class="fa-solid fa-clock"></i>
+
+                Recent Activities
+
+            </h3>
+
+
+
+            <p class="text-muted">
+
+                No recent activities available.
+
+            </p>
+
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+<style>
+
+
+    .dashboard-header {
+        background: linear-gradient(135deg,#003366,#006633);
+        color: white;
+        padding: 35px;
+        border-radius: 15px;
+    }
+
+
+
+    .dashboard-card {
+        background: white;
+        padding: 25px;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.1);
+        margin-bottom: 20px;
+    }
+
+
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+
+
+    .card-icon {
+        width: 70px;
+        height: 70px;
+        background: #006633;
+        color: white;
+        border-radius: 50%;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+    }
+
+
+
+    .dashboard-card h2 {
+        color: #003366;
+        font-size: 35px;
+    }
+
+
+
+
+    .dashboard-card a {
+        color: #006633;
+        font-weight: bold;
+    }
+
+
+
+
+    .quick-panel,
+    .activity-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    }
+
+
+
+    .quick-button {
+        display: block;
+        background: #003366;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 15px;
+    }
+
+
+
+        .quick-button:hover {
+            background: #006633;
+            color: white;
+            text-decoration: none;
+        }
+</style>
+
