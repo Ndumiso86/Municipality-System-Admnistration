@@ -1,5 +1,5 @@
 # Municipality-System-Admnistration
-, eThekwini Municipality struggles to effectively traCurrentlyck, monitor, and manage its 
+eThekwini Municipality struggles to effectively traCurrentlyck, monitor, and manage its 
 physical assets. Asset information is stored in spreadsheets or manual records, which 
 leads to inaccurate data, loss of assets, duplicate purchases, and inefficient maintenance 
 scheduling. There is also a lack of accountability on who is responsible for each asset. 
@@ -31,7 +31,7 @@ System Administrator portal
 •Select their roles
 •Create user password 
 •Update user information 
-•Delete after being unassigned
+•Manage permissions
 
 Asset Manager portal
 •Asset Manager login
@@ -39,23 +39,28 @@ Asset Manager portal
 •Manage asset
 •Update status
 •Schedule maintenance 
-•Wait for department head approval 
-•Assign Technician 
+•Requests disposal
+•Assign Technician
+.Record disposal
 
 Department head portal
 •Login
 •Dashboard 
-•View repair Dashboard 
-•Approve repair 
-•View history 
+•View reports 
+•Approve requests
 
 Technician portal
 •Login
 •Dashboard 
-•View assigned asset
-•Accept
-•Manage repair 
-•Request for disposal 
+.Schedule maintenance
+.Record maintenance
+.Update maintenance
+.Generate maintenance history
+
+Finance officer portal
+.Manage depreciation
+.Approval disposal
+
 
 
 
