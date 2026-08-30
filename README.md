@@ -61,6 +61,38 @@ Finance officer portal
 .Manage depreciation
 .Approval disposal
 
+Backend
+Technology Version purpose 
+ASP.NET MVC 5.2.7Web Framework
+Entity Framework 6 6.4.4 ORM for database operations 
+ASP.NET identity 2.2.3 Authentication & Authorization 
+OWIN 4.2.2 Middleware & Startup configuration
+C# 7.0+ Programming language 
+Unity Container 5.11.10 Dependency Injection
+
+Frontend
+
+Technology Version Purpose 
+Bootstarp 3.4.1 Responsive UI framework
+jQuery 3.5.1 DOM manipulation & AJAX 
+jQuery Validation 111.19.3 CLient-side validation 
+Font Awesome 6.5.1 Icons
+HTML5/CSS3 - structure & styling 
+Razor Syntax - Server-side templating
+
+Database 
+
+Technology Version Purpose
+SQL Server 2019+ Database
+SQL Server LocalDB - Development database 
+Entity Framework Migrations
+
+API & Services
+
+Service Purpose
+Google Maps API Location & Searching
+
+
 
 
 
