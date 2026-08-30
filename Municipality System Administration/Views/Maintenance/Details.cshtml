@@ -375,16 +375,16 @@
                                 status = "Upcoming";
                             }
                             string statusClass = "status-" + status.ToLower();
-                            <span>
-                                @Model.NextMaintenanceDate.Value.ToString("dd MMM yyyy")
-                                <span class="status-badge @statusClass">
-                                    <i class="fa fa-circle"></i> @status
-                                </span>
+                        <span>
+                            @Model.NextMaintenanceDate.Value.ToString("dd MMM yyyy")
+                            <span class="status-badge @statusClass">
+                                <i class="fa fa-circle"></i> @status
                             </span>
+                        </span>
                         }
                         else
                         {
-                            <span class="text-muted">Not Scheduled</span>
+                        <span class="text-muted">Not Scheduled</span>
                         }
                     </span>
                 </div>
@@ -392,10 +392,10 @@
         </div>
         @if (!string.IsNullOrEmpty(Model.MaintenanceNotes))
         {
-            <div class="detail-item">
-                <span class="detail-label">Maintenance Notes</span>
-                <span class="detail-value">@Model.MaintenanceNotes</span>
-            </div>
+        <div class="detail-item">
+            <span class="detail-label">Maintenance Notes</span>
+            <span class="detail-value">@Model.MaintenanceNotes</span>
+        </div>
         }
     </div>
 
@@ -404,43 +404,43 @@
 
         @if (history.Any())
         {
-            <div class="history-list">
-                @foreach (var item in history)
+        <div class="history-list">
+            @foreach (var item in history)
                 {
-                    <div class="history-item">
-                        <div class="date">
-                            <i class="fa fa-calendar-alt"></i>
-                            @item.Date.ToString("dd MMM yyyy HH:mm")
-                        </div>
-                        <div class="description">
-                            <i class="fa @(item.Type == "Recorded" ? "fa-clipboard-check text-success" : "fa-calendar-plus text-warning")"></i>
-                            @item.Description
-                        </div>
-                        <span class="type @(item.Type == "Recorded" ? "type-recorded" : "type-scheduled")">
-                            @item.Type
-                        </span>
-                    </div>
-                }
+            <div class="history-item">
+                <div class="date">
+                    <i class="fa fa-calendar-alt"></i>
+                    @item.Date.ToString("dd MMM yyyy HH:mm")
+                </div>
+                <div class="description">
+                    <i class="fa @(item.Type == "Recorded" ? "fa-clipboard-check text-success" : "fa-calendar-plus text-warning")"></i>
+                    @item.Description
+                </div>
+                <span class="type @(item.Type == "Recorded" ? "type-recorded" : "type-scheduled")">
+                    @item.Type
+                </span>
             </div>
+                }
+        </div>
         }
         else
         {
-            <div class="no-history">
-                <i class="fa fa-clock"></i>
-                <h5>No maintenance history</h5>
-                <p>No maintenance records have been recorded for this asset.</p>
-            </div>
+        <div class="no-history">
+            <i class="fa fa-clock"></i>
+            <h5>No maintenance history</h5>
+            <p>No maintenance records have been recorded for this asset.</p>
+        </div>
         }
 
         @if (history.Any())
         {
-            <hr />
-            <div class="text-muted" style="font-size: 0.9rem;">
-                <i class="fa fa-info-circle"></i>
-                Total maintenance records: <strong>@history.Count</strong>
-                | Recorded: <strong>@history.Count(h => h.Type == "Recorded")</strong>
-                | Scheduled: <strong>@history.Count(h => h.Type == "Scheduled")</strong>
-            </div>
+        <hr />
+        <div class="text-muted" style="font-size: 0.9rem;">
+            <i class="fa fa-info-circle"></i>
+            Total maintenance records: <strong>@history.Count</strong>
+            | Recorded: <strong>@history.Count(h => h.Type == "Recorded")</strong>
+            | Scheduled: <strong>@history.Count(h => h.Type == "Scheduled")</strong>
+        </div>
         }
     </div>
 
@@ -451,12 +451,12 @@
             </a>
             @if (User.IsInRole("Admin") || User.IsInRole("AssetManager"))
             {
-                <a href="@Url.Action("Schedule", new { id = Model.AssetId })" class="btn btn-primary">
-                    <i class="fa fa-calendar-plus"></i> Schedule Maintenance
-                </a>
-                <a href="@Url.Action("Record", new { id = Model.AssetId })" class="btn btn-success">
-                    <i class="fa fa-clipboard-check"></i> Record Maintenance
-                </a>
+            <a href="@Url.Action("Schedule", new { id = Model.AssetId })" class="btn btn-primary">
+                <i class="fa fa-calendar-plus"></i> Schedule Maintenance
+            </a>
+            <a href="@Url.Action("Record", new { id = Model.AssetId })" class="btn btn-success">
+                <i class="fa fa-clipboard-check"></i> Record Maintenance
+            </a>
             }
             <a href="@Url.Action("Details", "Assets", new { id = Model.AssetId })" class="btn btn-info">
                 <i class="fa fa-eye"></i> View Asset Details

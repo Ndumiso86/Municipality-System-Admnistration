@@ -305,13 +305,13 @@
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fa fa-check-circle"></i>
-            @TempData["Success"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa fa-check-circle"></i>
+        @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     }
 
     <div class="page-header">
@@ -379,64 +379,64 @@
                                                item.Status == "Upcoming" ? "fa-clock" :
                                                item.Status == "OK" ? "fa-check-circle" : "fa-minus-circle";
 
-                            <tr>
-                                <td><strong>@item.AssetNumber</strong></td>
-                                <td><i class="fa fa-box"></i> @item.AssetName</td>
-                                <td><span class="badge-secondary">@item.Category</span></td>
-                                <td>
-                                    @item.Brand
-                                    @if (!string.IsNullOrEmpty(item.Model))
+                    <tr>
+                        <td><strong>@item.AssetNumber</strong></td>
+                        <td><i class="fa fa-box"></i> @item.AssetName</td>
+                        <td><span class="badge-secondary">@item.Category</span></td>
+                        <td>
+                            @item.Brand
+                            @if (!string.IsNullOrEmpty(item.Model))
                                     {
-                                        <small class="text-muted">/ @item.Model</small>
+                            <small class="text-muted">/ @item.Model</small>
                                     }
-                                </td>
-                                <td>@(item.LastMaintenanceDate?.ToString("dd MMM yyyy") ?? "Never")</td>
-                                <td>@(item.NextMaintenanceDate?.ToString("dd MMM yyyy") ?? "Not Scheduled")</td>
-                                <td>
-                                    <span class="status-badge @statusClass">
-                                        <i class="fa @statusIcon"></i> @item.Status
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        @if (User.IsInRole("Admin") || User.IsInRole("AssetManager"))
+                        </td>
+                        <td>@(item.LastMaintenanceDate?.ToString("dd MMM yyyy") ?? "Never")</td>
+                        <td>@(item.NextMaintenanceDate?.ToString("dd MMM yyyy") ?? "Not Scheduled")</td>
+                        <td>
+                            <span class="status-badge @statusClass">
+                                <i class="fa @statusIcon"></i> @item.Status
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                @if (User.IsInRole("Admin") || User.IsInRole("AssetManager"))
                                         {
-                                            <a href="@Url.Action("Schedule", "Maintenance", new { id = item.AssetId })"
-                                               class="btn btn-primary btn-sm" title="Schedule Maintenance">
-                                                <i class="fa fa-calendar-plus"></i>
-                                            </a>
-                                            <a href="@Url.Action("Record", "Maintenance", new { id = item.AssetId })"
-                                               class="btn btn-success btn-sm" title="Record Maintenance">
-                                                <i class="fa fa-clipboard-check"></i>
-                                            </a>
+                                <a href="@Url.Action("Schedule", "Maintenance", new { id = item.AssetId })"
+                                   class="btn btn-primary btn-sm" title="Schedule Maintenance">
+                                    <i class="fa fa-calendar-plus"></i>
+                                </a>
+                                <a href="@Url.Action("Record", "Maintenance", new { id = item.AssetId })"
+                                   class="btn btn-success btn-sm" title="Record Maintenance">
+                                    <i class="fa fa-clipboard-check"></i>
+                                </a>
                                         }
-                                        @if (User.IsInRole("Admin") || User.IsInRole("AssetManager") || User.IsInRole("Technician"))
+                                @if (User.IsInRole("Admin") || User.IsInRole("AssetManager") || User.IsInRole("Technician"))
                                         {
-                                            <a href="@Url.Action("Details", "Maintenance", new { id = item.AssetId })"
-                                               class="btn btn-info btn-sm" title="View History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
+                                <a href="@Url.Action("Details", "Maintenance", new { id = item.AssetId })"
+                                   class="btn btn-info btn-sm" title="View History">
+                                    <i class="fa fa-history"></i>
+                                </a>
                                         }
-                                        <a href="@Url.Action("Details", "Assets", new { id = item.AssetId })"
-                                           class="btn btn-secondary btn-sm" title="View Asset">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <a href="@Url.Action("Details", "Assets", new { id = item.AssetId })"
+                                   class="btn btn-secondary btn-sm" title="View Asset">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                         }
                     }
                     else
                     {
-                        <tr>
-                            <td colspan="8">
-                                <div class="text-center py-5">
-                                    <i class="fa fa-calendar-check fa-3x text-muted mb-3"></i>
-                                    <h4>No maintenance records found</h4>
-                                    <p class="text-muted">No assets have been scheduled for maintenance yet.</p>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="8">
+                            <div class="text-center py-5">
+                                <i class="fa fa-calendar-check fa-3x text-muted mb-3"></i>
+                                <h4>No maintenance records found</h4>
+                                <p class="text-muted">No assets have been scheduled for maintenance yet.</p>
+                            </div>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

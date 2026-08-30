@@ -247,13 +247,13 @@
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-circle"></i>
-            @TempData["Error"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fa fa-exclamation-circle"></i>
+        @TempData["Error"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     }
 
     <div class="header">
@@ -268,150 +268,150 @@
 
         @if (Model != null)
         {
-            <div class="info-box">
-                <i class="fa fa-info-circle"></i>
-                <strong>Note:</strong> Recording maintenance will update the asset's maintenance history.
-                This helps track the asset's condition and schedule future maintenance.
-            </div>
+        <div class="info-box">
+            <i class="fa fa-info-circle"></i>
+            <strong>Note:</strong> Recording maintenance will update the asset's maintenance history.
+            This helps track the asset's condition and schedule future maintenance.
+        </div>
 
             if (ViewBag.SuggestedNextDate != null)
             {
-                <div class="suggested-date">
-                    <i class="fa fa-lightbulb"></i>
-                    <strong>Suggested Next Maintenance:</strong>
-                    @(((DateTime)ViewBag.SuggestedNextDate).ToString("dd MMM yyyy"))
-                    <small class="text-muted">
-                        (Based on the current maintenance frequency)
-                    </small>
-                </div>
+        <div class="suggested-date">
+            <i class="fa fa-lightbulb"></i>
+            <strong>Suggested Next Maintenance:</strong>
+            @(((DateTime)ViewBag.SuggestedNextDate).ToString("dd MMM yyyy"))
+            <small class="text-muted">
+                (Based on the current maintenance frequency)
+            </small>
+        </div>
             }
 
             using (Html.BeginForm("Record", "Maintenance", new { id = Model.AssetId }, FormMethod.Post))
             {
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.AssetId)
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.AssetId)
 
-                <div class="asset-info">
-                    <h5><i class="fa fa-box"></i> Asset Information</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="asset-info-item">
-                                <span class="asset-info-label">Asset Number:</span>
-                                <strong>@Model.AssetNumber</strong>
-                            </div>
-                            <div class="asset-info-item">
-                                <span class="asset-info-label">Asset Name:</span>
-                                <strong>@Model.AssetName</strong>
-                            </div>
-                            <div class="asset-info-item">
-                                <span class="asset-info-label">Category:</span>
-                                <strong>@Model.Category</strong>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="asset-info-item">
-                                <span class="asset-info-label">Brand/Model:</span>
-                                <strong>@Model.Brand @(!string.IsNullOrEmpty(Model.Model) ? "/ " + Model.Model : "")</strong>
-                            </div>
-                            <div class="asset-info-item">
-                                <span class="asset-info-label">Last Maintenance:</span>
-                                <strong>@(Model.LastMaintenanceDate?.ToString("dd MMM yyyy") ?? "Never")</strong>
-                            </div>
-                            <div class="asset-info-item">
-                                <span class="asset-info-label">Next Maintenance:</span>
-                                <strong>@(Model.NextMaintenanceDate?.ToString("dd MMM yyyy") ?? "Not Scheduled")</strong>
-                            </div>
-                        </div>
+        <div class="asset-info">
+            <h5><i class="fa fa-box"></i> Asset Information</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="asset-info-item">
+                        <span class="asset-info-label">Asset Number:</span>
+                        <strong>@Model.AssetNumber</strong>
+                    </div>
+                    <div class="asset-info-item">
+                        <span class="asset-info-label">Asset Name:</span>
+                        <strong>@Model.AssetName</strong>
+                    </div>
+                    <div class="asset-info-item">
+                        <span class="asset-info-label">Category:</span>
+                        <strong>@Model.Category</strong>
                     </div>
                 </div>
-
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="MaintenanceDate" class="required">Maintenance Date</label>
-                            <input type="date" name="MaintenanceDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
-                            @Html.ValidationMessage("MaintenanceDate", "", new { @class = "text-danger" })
-                        </div>
+                <div class="col-md-6">
+                    <div class="asset-info-item">
+                        <span class="asset-info-label">Brand/Model:</span>
+                        <strong>@Model.Brand @(!string.IsNullOrEmpty(Model.Model) ? "/ " + Model.Model : "")</strong>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="NextMaintenanceDate">Next Maintenance Date</label>
-                            <input type="date" name="NextMaintenanceDate" class="form-control" value="@(ViewBag.SuggestedNextDate != null ? ((DateTime)ViewBag.SuggestedNextDate).ToString("yyyy-MM-dd") : "")" />
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle"></i>
-                                When is the next maintenance due? (Leave blank to use the suggested date)
-                            </small>
-                        </div>
+                    <div class="asset-info-item">
+                        <span class="asset-info-label">Last Maintenance:</span>
+                        <strong>@(Model.LastMaintenanceDate?.ToString("dd MMM yyyy") ?? "Never")</strong>
+                    </div>
+                    <div class="asset-info-item">
+                        <span class="asset-info-label">Next Maintenance:</span>
+                        <strong>@(Model.NextMaintenanceDate?.ToString("dd MMM yyyy") ?? "Not Scheduled")</strong>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="PerformedBy">Performed By</label>
-                            <input type="text" name="PerformedBy" class="form-control" placeholder="Name of person who performed maintenance" />
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle"></i>
-                                Who performed the maintenance?
-                            </small>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="MaintenanceCost">Maintenance Cost</label>
-                            <div class="input-group">
-                                <span class="input-group-addon" style="padding: 0.375rem 0.75rem; background-color: #e9ecef; border: 1px solid #ced4da; border-right: none; border-radius: 0.25rem 0 0 0.25rem;">R</span>
-                                <input type="number" name="MaintenanceCost" class="form-control" placeholder="0.00" step="0.01" min="0" style="border-radius: 0 0.25rem 0.25rem 0;" />
-                            </div>
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle"></i>
-                                Total cost of maintenance (if applicable).
-                            </small>
-                        </div>
-                    </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="MaintenanceDate" class="required">Maintenance Date</label>
+                    <input type="date" name="MaintenanceDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                    @Html.ValidationMessage("MaintenanceDate", "", new { @class = "text-danger" })
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="MaintenanceNotes">Maintenance Notes</label>
-                            <textarea name="MaintenanceNotes" class="form-control" rows="4" placeholder="Describe the maintenance performed..."></textarea>
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle"></i>
-                                Describe what was done, parts replaced, issues found, etc.
-                            </small>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="NextMaintenanceDate">Next Maintenance Date</label>
+                    <input type="date" name="NextMaintenanceDate" class="form-control" value="@(ViewBag.SuggestedNextDate != null ? ((DateTime)ViewBag.SuggestedNextDate).ToString("yyyy-MM-dd") : "")" />
+                    <small class="text-muted">
+                        <i class="fa fa-info-circle"></i>
+                        When is the next maintenance due? (Leave blank to use the suggested date)
+                    </small>
                 </div>
+            </div>
+        </div>
 
-                <hr />
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fa fa-save"></i>
-                            Record Maintenance
-                        </button>
-                        <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
-                            <i class="fa fa-arrow-left"></i>
-                            Cancel
-                        </a>
-                    </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="PerformedBy">Performed By</label>
+                    <input type="text" name="PerformedBy" class="form-control" placeholder="Name of person who performed maintenance" />
+                    <small class="text-muted">
+                        <i class="fa fa-info-circle"></i>
+                        Who performed the maintenance?
+                    </small>
                 </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="MaintenanceCost">Maintenance Cost</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" style="padding: 0.375rem 0.75rem; background-color: #e9ecef; border: 1px solid #ced4da; border-right: none; border-radius: 0.25rem 0 0 0.25rem;">R</span>
+                        <input type="number" name="MaintenanceCost" class="form-control" placeholder="0.00" step="0.01" min="0" style="border-radius: 0 0.25rem 0.25rem 0;" />
+                    </div>
+                    <small class="text-muted">
+                        <i class="fa fa-info-circle"></i>
+                        Total cost of maintenance (if applicable).
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="MaintenanceNotes">Maintenance Notes</label>
+                    <textarea name="MaintenanceNotes" class="form-control" rows="4" placeholder="Describe the maintenance performed..."></textarea>
+                    <small class="text-muted">
+                        <i class="fa fa-info-circle"></i>
+                        Describe what was done, parts replaced, issues found, etc.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fa fa-save"></i>
+                    Record Maintenance
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                    <i class="fa fa-arrow-left"></i>
+                    Cancel
+                </a>
+            </div>
+        </div>
             }
         }
         else
         {
-            <div class="alert alert-danger">
-                <i class="fa fa-exclamation-circle"></i>
-                Asset not found or has been deleted.
-            </div>
-            <a href="@Url.Action("Index")" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i>
-                Back to Maintenance
-            </a>
+        <div class="alert alert-danger">
+            <i class="fa fa-exclamation-circle"></i>
+            Asset not found or has been deleted.
+        </div>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i>
+            Back to Maintenance
+        </a>
         }
 
     </div>
